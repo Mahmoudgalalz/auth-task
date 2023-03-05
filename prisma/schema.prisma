@@ -1,0 +1,29 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+  directUrl = "mongodb+srv://kro:Ph58RK3Sks5RWvlb@testing.yiglajn.mongodb.net/auth"
+  
+}
+
+model User {
+  id            String      @id @default(uuid()) @map("_id") @db.ObjectId
+  username      String      @unique
+  password      String
+  name          String?
+  addressbook   AddressBook?
+  createdAt     DateTime    @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+type AddressBook {
+  email   String 
+  phone   String 
+  country String
+  city    String
+  street  String
+}
