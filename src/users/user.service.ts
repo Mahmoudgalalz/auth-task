@@ -19,4 +19,11 @@ export class UsersService {
             data:updateUserDto
         })
     }
+    
+    async get(username:string) : Promise<UserModel>{
+        const user = await this.prisma.user.findFirst({
+            where:{username}
+        })
+        return user;
+    }
 }
