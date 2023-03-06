@@ -1,8 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compareSync, hashSync } from 'bcryptjs';
+import { User } from '@prisma/client';
+import { compare, compareSync, hashSync } from 'bcryptjs';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { UsersService } from 'src/users/user.service';
+import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
@@ -18,24 +21,18 @@ export class AuthService {
     try {
       const user = await this.usersService.create({
         ...registerDto,
-        name: '',
-        email: '',
-        phone: '',
-        country: '',
-        city: '',
-        street: ''
       })
       return user;
     }
     catch(err){
       throw new HttpException(
-        "",
+        `${err}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       )
     }
   }
   async verfiyPassword(password:string , hashedPassword:string ){
-    const isPasswordMatching = compareSync(password,hashedPassword)
+    const isPasswordMatching = compare(password,hashedPassword)
 
     if(!isPasswordMatching){
       throw new HttpException(
@@ -44,25 +41,35 @@ export class AuthService {
       )
     }
   }
+  
+  getAccessToken(id: string) {
+    return this.jwtService.sign({ id });
+  }
 
-
-  async getUser(username:string , password:string) {
+  async getUser(loginDto:LoginDto) {
     try{
-      const user=await this.usersService.get(username)
+      const user=await this.usersService.findByIdentifier(loginDto.username)
 
-      await this.verfiyPassword(password,user.password)
-
+      await this.verfiyPassword(loginDto.password,user.password)
       return user
     }
     catch(err){
       throw new HttpException(
-        'username is not definded',
+        'username is not found',
         HttpStatus.UNAUTHORIZED
       )
     }
   }
 
-  async updateUser(id:string, newData:UpdateUserDto){
+  getUserFromAccessToken(accessToken:string){
+    const payload:User= this.jwtService.verify(accessToken,{
+      secret:'SECRET_KEY'
+    })
+    return this.usersService.findByIdentifier(payload.username)
+  }
+
+  async updateUser(token:string,newData:UpdateUserDto){
+    const {id}= await this.getUserFromAccessToken(token)
     return this.usersService.update(id,newData)
   }
 }
