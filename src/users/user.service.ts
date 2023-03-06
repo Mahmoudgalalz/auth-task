@@ -1,13 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "@prisma/client";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { PrismaClient, User as UserModel } from "@prisma/client";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { User as UserModel } from '@prisma/client'
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { hashSync } from "bcryptjs";
+import { PrismaService } from "src/prisma/prisma.service";
+
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma:PrismaClient) {}
+    constructor(private prisma:PrismaService) {}
 
     async create(createUserDto: CreateUserDto) : Promise<UserModel> {
         createUserDto.password = hashSync(createUserDto.password)
@@ -20,12 +21,27 @@ export class UsersService {
             where:{ id },
             data:updateUserDto
         })
+        return 'Updated'
     }
     
-    async get(username:string) : Promise<UserModel>{
+    async findById(id: string): Promise<UserModel> {
+        const user = await this.prisma.user.findFirst({ where: { id } });
+    
+        if (user) {
+          return user;
+        }
+    
+        throw new HttpException('A user with this username/email does not exist.', HttpStatus.NOT_FOUND);
+    }
+
+    async findByIdentifier(username:string) : Promise<any>{
         const user = await this.prisma.user.findFirst({
             where:{username}
         })
-        return user;
+        if(user)
+        {
+            return user;
+        }
+        throw new HttpException('A username does not exist',HttpStatus.NOT_FOUND)
     }
 }
