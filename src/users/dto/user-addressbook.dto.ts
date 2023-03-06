@@ -3,18 +3,18 @@ import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 export class UserAddressBookDto {
     @IsEmail()
     @IsString()
-    email:string;
+    email?:string;
     
     @IsString()
-    phone:string;
+    phone?:string;
 
     @IsString()
-    country: string;
+    country?: string;
 
     @IsString()
-    city: string;
+    city?: string;
 
     @IsString()
-    street: string;
+    street?: string;
 
 }

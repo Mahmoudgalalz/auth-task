@@ -1,4 +1,4 @@
-import { Exclude, Transform } from "class-transformer";
+import { Transform } from "class-transformer";
 import { IsNotEmpty, IsString, Matches, MinLength } from "class-validator";
 import { UserAddressBookDto } from "./user-addressbook.dto";
 
@@ -10,11 +10,10 @@ export class CreateUserDto extends UserAddressBookDto {
     })
     username: string;
 
-    @Exclude()
+    @IsNotEmpty()
     password:string;
     
     @IsString()
-    @IsNotEmpty()
-    name: string;
+    name?: string;
 
 }
