@@ -10,6 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
+            //dump key, better not change if you use the same DB
             secretOrKey: 'SECRET_KEY'
         });
     }
