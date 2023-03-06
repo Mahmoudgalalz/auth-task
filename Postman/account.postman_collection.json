@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "ffff317c-495b-4f3e-8540-3cc337978a9c",
+		"name": "account",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19363917"
+	},
+	"item": [
+		{
+			"name": "Create User with full data",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"krokingzz\",\n    \"password\": \"1234ssd\",\n    \"name\": \"MyName\",\n    \"addressbook\": {\n        \"email\": \"test@test.com\",\n        \"phone\": \"0100123456\",\n        \"country\": \"Egypt\",\n        \"city\": \"Cairo\",\n        \"street\": \"Maadi\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User, auth only",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"krokingzz\",\n    \"password\": \"1234ssd\",\n    \"name\": \"MyName\",\n    \"addressbook\": {\n        \"email\": \"test@test.com\",\n        \"phone\": \"0100123456\",\n        \"country\": \"Egypt\",\n        \"city\": \"Cairo\",\n        \"street\": \"Maadi\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Data",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDVhMzZmZjJiZjY1OWMyOTg3OTc0MCIsImlhdCI6MTY3ODA5MTExOSwiZXhwIjoxNjgzMjc1MTE5fQ.La_vx_rseInLUeV28mWyBb586fzPRaoTJnJbXYQBZ0U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"krokingzz\",\n    \"password\": \"1234ssd\",\n    \"name\": \"ChangeName\",\n    \"addressbook\": {\n        \"email\": \"test@test.com\",\n        \"phone\": \"0100123456\",\n        \"country\": \"Egypt\",\n        \"city\": \"Cairo\",\n        \"street\": \"Nasr City\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"krokingzz\",\n    \"password\": \"1234ssd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/account/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user - Auth",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDVhMzZmZjJiZjY1OWMyOTg3OTc0MCIsImlhdCI6MTY3ODA5MTExOSwiZXhwIjoxNjgzMjc1MTE5fQ.La_vx_rseInLUeV28mWyBb586fzPRaoTJnJbXYQBZ0U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"account"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
