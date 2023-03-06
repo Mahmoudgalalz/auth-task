@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, UseGuards, Headers } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/register.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
-@Controller('auth')
+@Controller('account')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  async register(@Body() registerDto:RegisterDto){
+    const user = await this.authService.register(registerDto)
+    const accessToken = this.authService.getAccessToken(user.id)
+
+    return {user,accessToken}
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  findAll() {
-    return this.authService.findAll();
+  async login(@Headers() headers){
+    const token = headers.authorization.split(' ')[1]
+    const user = this.authService.getUserFromAccessToken(token)
+    return user;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @UseGuards(AuthGuard('jwt'))
+  @Patch()
+  async updateProfile(@Body() updateProfileDto: UpdateUserDto, @Headers() headers){
+    const token = headers.authorization.split(' ')[1]
+    return this.authService.updateUser(token,updateProfileDto)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Get('login')
+  async getUser(@Body() loginDto:LoginDto){
+    const user= await this.authService.getUser(loginDto)
+    return user;
   }
 }
